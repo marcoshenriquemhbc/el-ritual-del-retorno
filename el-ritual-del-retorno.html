@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Ritual del Retorno — Diagnóstico Energético</title>
+
+<!-- Preconnect para rápida conexión de origens externas -->
+<link rel="preconnect" href="https://lp.iaatende.click" crossorigin>
+<link rel="preconnect" href="https://fast.wistia.com" crossorigin>
+
+<style>
+  :root{
+    --bg: #0A0908;
+    --card: #121110;
+    --card-deep: #1B1917;
+    --ink: #FFFFFF;
+    --ink-soft: #D1D1D1;
+    --accent: #E5484D;
+    --accent-soft: #FF5A5F;
+    --sage: #E5484D;
+    --sage-deep: #B32B30;
+    --line: rgba(255,255,255,0.2);
+    --display: 'Fraunces', Georgia, serif;
+    --body: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+  }
+
+  @font-face{
+    font-family:'Fraunces';
+    src: local('Georgia');
+    font-display: swap;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html,body{
+    margin:0; padding:0;
+    background: var(--bg);
+    font-family: var(--body);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 32px 16px;
+    background:
+      radial-gradient(ellipse at top, #1C0A0B 0%, #0A0908 60%),
+      var(--bg);
+  }
+
+  .phone{
+    width: 100%;
+    max-width: 420px;
+    min-height: 720px;
+    background: var(--card);
+    border-radius: 28px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 40px 80px -20px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.08);
+    display:flex;
+    flex-direction:column;
+  }
+
+  /* ---------- root/vine progress signature ---------- */
+  .root-progress{
+    width:100%;
+    padding: 22px 24px 8px;
+    background: var(--card);
+  }
+  .root-progress svg{ width:100%; height:34px; display:block; }
+  .root-track{
+    stroke: var(--line);
+    stroke-width: 3;
+    fill:none;
+  }
+  .root-fill{
+    stroke: #E5484D;
+    stroke-width: 3;
+    fill:none;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.6s cubic-bezier(.4,0,.2,1);
+  }
+  .progress-meta{
+    display:flex;
+    justify-content:flex-end;
+    align-items:baseline;
+    padding: 2px 2px 0;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+  }
+
+  /* ---------- question area ---------- */
+  .stage{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    padding: 20px 26px 28px;
+    overflow-y: auto;
+  }
+
+  .eyebrow{
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+
+  h1.question{
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    color: #FFFFFF;
+    margin: 0 0 22px;
+  }
+
+  /* Bloco de alerta suave no diagnóstico */
+  .urgency-box{
+    background: rgba(229, 72, 77, 0.12);
+    border-left: 3px solid #E5484D;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 13.5px;
+    color: #FF8A8E;
+    margin: 12px 0 16px;
+    line-height: 1.45;
+  }
+
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap: 10px;
+  }
+
+  button.option{
+    text-align:left;
+    padding: 15px 18px;
+    border-radius: 12px;
+    border: 1.5px solid var(--line);
+    background: rgba(255,255,255,0.04);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 15px;
+    font-weight: 500;
+    cursor:pointer;
+    transition: border-color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+  }
+  button.option:hover{
+    border-color: var(--accent);
+    background: rgba(229,72,77,0.12);
+    transform: translateX(2px);
+  }
+  button.option:active{ transform: translateX(2px) scale(0.99); }
+  button.option.selected{
+    border-color: var(--accent);
+    background: var(--accent);
+    color: #FFFFFF;
+    font-weight: 600;
+  }
+
+  input.text-input{
+    width: 100%;
+    padding: 15px 18px;
+    border-radius: 12px;
+    border: 1.5px solid var(--line);
+    background: rgba(255,255,255,0.04);
+    font-family: var(--body);
+    font-size: 16px;
+    color: var(--ink);
+    outline:none;
+  }
+  input.text-input:focus{ border-color: var(--accent); }
+  input.text-input.input-error{ border-color: #E5484D; }
+
+  .continue-btn{
+    margin-top: 22px;
+    padding: 15px 18px;
+    border-radius: 12px;
+    border:none;
+    background: var(--accent);
+    color: #FFFFFF;
+    font-family: var(--body);
+    font-weight: 700;
+    font-size: 15.5px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    width: 100%;
+    transition: background 0.2s ease, opacity 0.2s ease;
+  }
+  .continue-btn:disabled{ opacity: 0.35; cursor:not-allowed; }
+  .continue-btn:not(:disabled):hover{ background: var(--accent-soft); }
+
+  .back-btn{
+    background:none;
+    border:none;
+    color: var(--ink-soft);
+    font-family: var(--body);
+    font-size: 13px;
+    cursor:pointer;
+    align-self:flex-start;
+    margin-bottom: 16px;
+    padding: 4px 0;
+  }
+  .back-btn:hover{ color: var(--ink); }
+
+  .hint{
+    font-family: var(--body);
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    margin-top: 6px;
+  }
+  .hint.error-text{ color: #E5484D; }
+
+  footer.brand{
+    text-align:center;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+    padding: 14px 0 20px;
+    opacity: 0.75;
+  }
+
+  /* ---------- landing screen ---------- */
+  #landing-view{
+    display:flex;
+    flex-direction:column;
+    min-height: 720px;
+  }
+  .landing-stage{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    padding: 40px 28px 12px;
+  }
+  .landing-image{
+    width: 100%;
+    max-width: 260px;
+    margin-bottom: 20px;
+    aspect-ratio: 1/1;
+  }
+  .landing-image img{
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+    display: block;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    border: 1px solid var(--line);
+  }
+
+  h1.landing-headline{
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin: 0 0 14px;
+  }
+
+  p.landing-subheadline{
+    font-family: var(--body);
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    margin: 0 0 28px;
+    max-width: 320px;
+  }
+
+  .start-btn{
+    width:100%;
+    max-width: 320px;
+    padding: 17px 18px;
+    border-radius: 12px;
+    border:none;
+    background: var(--accent);
+    color: #FFFFFF;
+    font-family: var(--body);
+    font-weight: 700;
+    font-size: 16px;
+    cursor:pointer;
+    transition: background 0.2s ease;
+  }
+  .start-btn:hover{ background: var(--accent-soft); }
+
+  .trust-line{
+    display:flex;
+    flex-direction:column;
+    gap: 6px;
+    margin-top: 16px;
+    font-family: var(--body);
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+
+  /* ---------- custom story screen (Q12) ---------- */
+  .story-box{
+    background: rgba(255,255,255,0.03);
+    border-radius: 16px;
+    padding: 18px;
+    border: 1px solid var(--line);
+    margin-bottom: 18px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    text-align: center;
+  }
+  .profile-photo{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 14px;
+    display: block;
+    border: 2px solid var(--accent);
+  }
+  .story-box p{ margin: 0 0 12px; text-align: left; }
+  .story-box p:last-child{ margin: 0; }
+
+  /* Carrusel de Testimonios */
+  .carousel-container{
+    margin: 16px 0;
+    overflow-x: auto;
+    display: flex;
+    gap: 12px;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 8px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .carousel-container::-webkit-scrollbar {
+    height: 4px;
+  }
+  .carousel-container::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 4px;
+  }
+  .carousel-item{
+    flex: 0 0 85%;
+    scroll-snap-align: center;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: var(--card-deep);
+  }
+  .carousel-item img{
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .carousel-hint{
+    font-size: 11px;
+    color: var(--accent);
+    font-family: var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+
+  /* ---------- analyzing screen ---------- */
+  .analyzing{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding: 40px 30px;
+    text-align:center;
+  }
+  .ring-wrap{
+    width:150px; height:150px;
+    margin-bottom: 26px;
+    position:relative;
+  }
+  .ring-wrap svg{ width:100%; height:100%; transform: rotate(-90deg); }
+  .ring-bg{ stroke: var(--line); stroke-width:6; fill:none; }
+  .ring-fg{
+    stroke: var(--accent);
+    stroke-width:6;
+    fill:none;
+    stroke-linecap:round;
+    transition: stroke-dashoffset 0.3s linear;
+  }
+  .ring-pct{
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    font-family: var(--display);
+    font-size: 30px;
+    font-weight:600;
+    color: var(--ink);
+  }
+  .analyzing p{
+    font-family: var(--body);
+    font-size: 14.5px;
+    color: var(--ink-soft);
+    line-height:1.6;
+    max-width: 280px;
+  }
+  .analyzing-step{
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+    min-height: 14px;
+  }
+
+  /* ---------- result / VSL screen ---------- */
+  .result-stage{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    padding: 0 0 28px;
+    overflow-y: auto;
+  }
+  .result-hero{
+    background: linear-gradient(160deg, #2A090B 0%, #0A0908 100%);
+    padding: 30px 24px 24px;
+    color: #FFFFFF;
+    border-bottom: 1px solid var(--line);
+  }
+  .result-hero .eyebrow{ color: var(--accent); }
+  .result-hero h2{
+    font-family: var(--display);
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 0 0 10px;
+    color: #FFFFFF;
+  }
+  .result-hero p{
+    font-family: var(--body);
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    margin:0 0 10px;
+  }
+  .bullet-list{
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 0;
+    font-size: 13.5px;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+  .bullet-list li{
+    margin-bottom: 6px;
+  }
+
+  .video-block{
+    padding: 20px 24px 0;
+  }
+  .video-frame{
+    width:100%;
+    background: #14100D;
+    border-radius: 16px;
+    overflow:hidden;
+    position:relative;
+    min-height: 200px;
+  }
+
+  /* Area de Oferta Oculta */
+  .offer-wrap{
+    opacity: 0;
+    transform: translateY(12px);
+    pointer-events: none;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    padding: 20px 24px 0;
+  }
+  .offer-wrap.visible{
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .discount-tag{
+    background: rgba(229, 72, 77, 0.2);
+    border: 1px solid #E5484D;
+    color: #FF6B6B;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+    padding: 6px 12px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .offer-card{
+    background: var(--card-deep);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+  }
+  .offer-title{
+    font-family: var(--display);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+  .old-price{
+    font-size: 14px;
+    color: var(--ink-soft);
+    text-decoration: line-through;
+    margin-bottom: 2px;
+  }
+  .new-price{
+    font-size: 32px;
+    font-weight: 800;
+    color: #FFFFFF;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .price-sub{
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-bottom: 18px;
+  }
+
+  .deliverables{
+    text-align: left;
+    border-top: 1px dashed var(--line);
+    padding-top: 16px;
+    margin-bottom: 20px;
+  }
+  .deliverables ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .deliverables li{
+    font-size: 13.5px;
+    color: var(--ink);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .buy-btn{
+    width:100%;
+    padding: 18px;
+    border-radius: 14px;
+    border:none;
+    background: #25D366;
+    color: #06210F;
+    font-family: var(--body);
+    font-weight: 800;
+    font-size: 16px;
+    cursor:pointer;
+    box-shadow: 0 4px 20px rgba(37, 211, 102, 0.3);
+    transition: background 0.2s ease, transform 0.15s ease;
+  }
+  .buy-btn:hover{ background: #2FE377; transform: scale(1.02); }
+
+  .scarcity-note{
+    text-align:center;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: #E5484D;
+    font-weight: 700;
+    margin-top: 12px;
+  }
+
+  .date-note{
+    text-align:center;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    margin-top: 8px;
+  }
+
+  .legal-note{
+    text-align:center;
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    margin-top: 6px;
+    opacity: 0.7;
+    line-height: 1.4;
+  }
+
+  .buy-lock-note{
+    text-align:center;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    margin-top: 16px;
+    padding: 0 24px;
+  }
+
+  [hidden]{ display:none !important; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="phone" id="phone">
+
+  <!-- LANDING SCREEN -->
+  <div id="landing-view">
+    <div class="landing-stage">
+      <div class="landing-image">
+        <img src="https://lp.iaatende.click/wp-content/uploads/2026/07/Gemini_Generated_Image_bfz12rbfz12rbfz1-1.png" 
+             alt="El Ritual del Retorno" 
+             width="260" 
+             height="260" 
+             fetchpriority="high" 
+             loading="eager">
+      </div>
+
+      <h1 class="landing-headline">Haz este ritual de amor y verás a la persona que amas volver buscándote en torno a 7 días</h1>
+      <p class="landing-subheadline">Sin karma ni consecuencias negativas para ti ni para él</p>
+
+      <button class="start-btn" id="start-btn" onclick="startQuiz()">Iniciar Diagnóstico</button>
+
+      <div class="trust-line">
+        <span>🔒 100% Confidencial y Privado</span>
+        <span>🔥 Ritual Energético Personalizado</span>
+      </div>
+    </div>
+    <footer class="brand">© 2026 – EL RITUAL DEL RETORNO</footer>
+  </div>
+
+  <!-- QUIZ SCREENS -->
+  <div id="quiz-view" hidden>
+    <div class="root-progress">
+      <div class="progress-meta">
+        <span id="pct-label">0%</span>
+      </div>
+      <svg viewBox="0 0 360 34" preserveAspectRatio="none">
+        <path class="root-track" d="M4,17 Q90,4 180,17 T356,17"/>
+        <path class="root-fill" id="root-fill" d="M4,17 Q90,4 180,17 T356,17"/>
+      </svg>
+    </div>
+
+    <div class="stage">
+      <button class="back-btn" id="back-btn" onclick="goBack()">← Volver</button>
+      <div class="eyebrow" id="q-eyebrow">Diagnóstico Amoroso</div>
+      <h1 class="question" id="q-title">Pregunta</h1>
+      
+      <div class="options" id="q-options"></div>
+      
+      <div id="text-input-wrap" hidden>
+        <input type="text" class="text-input" id="text-input" placeholder="">
+        <div class="hint" id="text-hint"></div>
+        <button class="continue-btn" id="text-continue" onclick="submitText()">Continuar →</button>
+      </div>
+
+      <div id="story-wrap" hidden>
+        <div class="story-box" id="story-content"></div>
+        <button class="continue-btn" onclick="advance()">Continuar mi ritual ></button>
+      </div>
+    </div>
+
+    <footer class="brand">© 2026 – EL RITUAL DEL RETORNO</footer>
+  </div>
+
+  <!-- ANALYZING SCREEN (Q21) -->
+  <div id="analyzing-view" hidden>
+    <div class="analyzing">
+      <div class="analyzing-step" id="analyzing-step">ORGANIZANDO TUS RESPUESTAS</div>
+      <div class="ring-wrap">
+        <svg viewBox="0 0 100 100">
+          <circle class="ring-bg" cx="50" cy="50" r="44"/>
+          <circle class="ring-fg" id="ring-fg" cx="50" cy="50" r="44" stroke-dasharray="276.5" stroke-dashoffset="276.5"/>
+        </svg>
+        <div class="ring-pct" id="ring-pct">23%</div>
+      </div>
+      <p id="analyzing-desc">Estamos finalizando los últimos detalles de tu ritual personalizado... Tú y tu amor están más cerca que nunca de reencontrarse.</p>
+    </div>
+  </div>
+
+  <!-- RESULT / VSL SCREEN (Q22) -->
+  <div id="result-view" hidden>
+    <div class="result-stage">
+      <div class="result-hero">
+        <div class="eyebrow">Aviso Importante</div>
+        <h2 id="result-title">¡Tu ritual está listo!</h2>
+        <p id="result-subtitle">Si activas el ritual HOY, prepárate para ver a tu amor buscándote desesperadamente en los próximos 14 días.</p>
+        <ul class="bullet-list">
+          <li>🔥 No importa si te bloqueó.</li>
+          <li>🔥 No importa si está con otra persona.</li>
+          <li>❌ Sin karma negativo ni consecuencias dañinas para ti ni para él/ella.</li>
+        </ul>
+      </div>
+
+      <div class="video-block">
+        <div class="video-frame" id="vsl-container">
+          <!-- Wistia player injetado dinamicamente -->
+        </div>
+      </div>
+
+      <div class="buy-lock-note" id="buy-lock-note">🔒 Disponible después de ver el video</div>
+
+      <div class="offer-wrap" id="offer-wrap">
+        <div class="discount-tag">Último día con 93,97% de descuento</div>
+        
+        <div class="offer-card">
+          <div class="offer-title">El Ritual del retorno.</div>
+          <div class="old-price">$297,00</div>
+          <div class="new-price">$17,90*</div>
+          <div class="price-sub">Pago único, sin cuotas mensuales</div>
+
+          <div class="deliverables">
+            <ul>
+              <li>✔ Tu ritual 100% personalizado</li>
+              <li>✔ 3 regalos especiales</li>
+              <li>✔ 1 regalo secreto</li>
+              <li>✔ Garantía incondicional de 30 días</li>
+              <li>✔ Acceso de por vida</li>
+            </ul>
+          </div>
+
+          <button class="buy-btn" id="buy-btn">¡SOLO QUEDAN 6 RITUALES! ></button>
+          
+          <div class="scarcity-note">¡SOLO QUEDAN 6 RITUALES!</div>
+          <div class="date-note" id="dynamic-date-note">*Oferta válida hasta hoy a las 23:59</div>
+          <div class="legal-note">*Valor aproximado, en el siguiente paso se pueden agregar impuestos y tasas específicas de tu país.</div>
+        </div>
+        
+        <footer class="brand" style="margin-top: 10px;">© 2026 – El Ritual del retorno.</footer>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ============ QUESTION DATA ============ */
+const questions = [
+  { 
+    id: 2, 
+    type: 'single_or_text', 
+    eyebrow: 'Motivo de la Separación', 
+    title: '¿Cuál fue el verdadero motivo de su separación?',
+    options: [
+      'Discutíamos mucho.',
+      'La relación se fue enfriando poco a poco.',
+      'Me cambió por otra persona.',
+      'Celos frecuentes.'
+    ],
+    hasCustomInput: true,
+    placeholder: 'Escribe otro motivo...'
+  },
+  { 
+    id: 3, 
+    type: 'single', 
+    eyebrow: 'Tiempo Intentándolo', 
+    title: '¿Hace cuánto tiempo estás intentando reconquistar a tu ex?',
+    options: [
+      'Hace unos días',
+      'Hace unas semanas',
+      'Llevo meses insistiendo con la esperanza'
+    ] 
+  },
+  { 
+    id: 4, 
+    type: 'single', 
+    eyebrow: 'Contacto Actual', 
+    title: '¿Aún mantienes contacto con tu amor?',
+    options: [
+      'No, me bloqueó de todas partes',
+      'Perdimos el contacto',
+      'Hablamos muy rara vez',
+      'A veces hablamos, pero de forma fría',
+      'Aún hablamos con frecuencia'
+    ] 
+  },
+  { 
+    id: 5, 
+    type: 'single', 
+    eyebrow: 'Historial', 
+    title: '¿Cómo era el sentimiento al inicio de la relación?',
+    options: [
+      'Era intenso y siempre tuvimos mucha conexión',
+      'Inestable, a veces cercano, a veces frío',
+      'Siempre fue frío, nunca fue de demostrar sus sentimientos'
+    ] 
+  },
+  { 
+    id: 6, 
+    type: 'single', 
+    eyebrow: 'Decisión', 
+    title: '¿Quién decidió terminar la relación?',
+    options: [
+      'Yo',
+      'Él/Ella',
+      'Fue una decisión de los dos',
+      'Simplemente sucedió'
+    ] 
+  },
+  { 
+    id: 7, 
+    type: 'single', 
+    eyebrow: 'Sentimiento', 
+    title: '¿Cómo te sentiste después de la separación?',
+    options: [
+      'Me arrepentí inmediatamente',
+      'Intenté seguir adelante, pero pronto me arrepentí',
+      'Tardé en sentirlo, pero hoy me arrepentí de verdad',
+      'No le di mucha importancia'
+    ] 
+  },
+  { 
+    id: 8, 
+    type: 'single', 
+    eyebrow: 'Intentos Anteriores', 
+    title: '¿Ya has intentado hacer algo para reconquistar a tu amor?',
+    options: [
+      'Sí, intenté algunos rituales que encontré en internet',
+      'Sí, ya pagué por algunos trabajos, pero nada funcionó',
+      'Aún no, esta es la primera vez que busco algo así'
+    ] 
+  },
+  { 
+    id: 9, 
+    type: 'text', 
+    eyebrow: 'Identificación', 
+    title: '¿Cuál es tu nombre?',
+    placeholder: 'Escribe tu nombre...', 
+    hint: '' 
+  },
+  { 
+    id: 10, 
+    type: 'text', 
+    eyebrow: 'Tu Amor', 
+    title: '¿Cómo se llama tu amor?',
+    placeholder: 'Escribe el nombre de tu amor...', 
+    hint: '' 
+  },
+  { 
+    id: 11, 
+    type: 'date', 
+    eyebrow: 'Conexión Astral', 
+    title: '¿Cuál es tu fecha de nacimiento?',
+    placeholder: 'DD/MM/AAAA', 
+    hint: '' 
+  },
+  { 
+    id: 12, 
+    type: 'story', 
+    eyebrow: 'Presentación', 
+    title: 'Desliza hasta el final para continuar' 
+  },
+  { 
+    id: 13, 
+    type: 'single', 
+    eyebrow: 'Diagnóstico Exclusivo', 
+    title: '{NOME}, responde algunas preguntas más para que pueda preparar tu ritual exclusivo.',
+    hasUrgencyNote: 'Si no actúas ahora, puede seguir adelante para siempre...\n\n¿Qué es lo que más te duele en esta lucha por tenerlo/a de vuelta?',
+    options: [
+      'Me ignora como si nunca me hubiera amado',
+      'Está con otra persona y eso me destruye y me carcome por dentro',
+      'Lo intento, pero parece que nada funciona',
+      'El miedo al rechazo me paraliza por completo',
+      'Todas las opciones anteriores'
+    ] 
+  },
+  { 
+    id: 14, 
+    type: 'single', 
+    eyebrow: 'Reflexión', 
+    title: '¿Por qué crees que aún no has logrado reconquistar a tu ex?',
+    options: [
+      'Falta de comunicación',
+      'Heridas del pasado',
+      'Otras personas interfiriendo',
+      'No sé el motivo exacto'
+    ] 
+  },
+  { 
+    id: 15, 
+    type: 'single', 
+    eyebrow: 'Sentimiento', 
+    title: '{NOME}, ¿cómo te sientes cuando piensas en el fin de la relación?',
+    options: [
+      'Tristeza profunda',
+      'Ansiedad',
+      'Mucha rabia / enojo',
+      'No siento nada'
+    ] 
+  },
+  { 
+    id: 16, 
+    type: 'single', 
+    eyebrow: 'Recuerdos', 
+    title: '¿Sueles revivir mentalmente momentos específicos de la relación?',
+    options: [
+      'Sí, todos los días',
+      'Sí, a veces',
+      'Rara vez',
+      'Nunca me ha pasado'
+    ] 
+  },
+  { 
+    id: 17, 
+    type: 'single', 
+    eyebrow: 'Hábitos', 
+    title: '¿Tienes el hábito de revisar las redes sociales de tu ex?',
+    options: [
+      'Sí, todos los días',
+      'Sí, a veces',
+      'Rara vez',
+      'No, no me mantengo al tanto'
+    ] 
+  },
+  { 
+    id: 18, 
+    type: 'single', 
+    eyebrow: 'Impacto', 
+    title: '¿Sientes que esta situación está afectando otras áreas de tu vida?',
+    options: [
+      'Sí, mi salud emocional',
+      'Sí, mi desempeño profesional',
+      'Sí, estoy teniendo noches con mal sueño',
+      'Todas las opciones anteriores'
+    ] 
+  },
+  { 
+    id: 19, 
+    type: 'single', 
+    eyebrow: 'Objetivo', 
+    title: '¿Qué resultado te gustaría alcanzar con este ritual?',
+    options: [
+      'Que vuelva completamente enamorado/a',
+      'Que me pida perdón y reconsidere la separación',
+      'Que se aleje de cualquier otra persona',
+      'Todas las opciones anteriores'
+    ] 
+  },
+  { 
+    id: 20, 
+    type: 'single', 
+    eyebrow: 'Decisión Final', 
+    title: 'Si pudieras hacer que tu ex volviera HOY, ¿lo harías?',
+    options: [
+      '¡Sí, inmediatamente!',
+      'Quiero estar seguro/a de que funcionará, no importa cuánto tome',
+      'Ya no me importa tanto'
+    ] 
+  }
+];
+
+let current = 0;
+const answers = {};
+
+const qView = document.getElementById('quiz-view');
+const analyzingView = document.getElementById('analyzing-view');
+const resultView = document.getElementById('result-view');
+
+const qEyebrow = document.getElementById('q-eyebrow');
+const qTitle = document.getElementById('q-title');
+const qOptions = document.getElementById('q-options');
+const textWrap = document.getElementById('text-input-wrap');
+const textInput = document.getElementById('text-input');
+const textHint = document.getElementById('text-hint');
+const storyWrap = document.getElementById('story-wrap');
+const storyContent = document.getElementById('story-content');
+const backBtn = document.getElementById('back-btn');
+const pctLabel = document.getElementById('pct-label');
+const rootFill = document.getElementById('root-fill');
+
+const ROOT_LENGTH = rootFill.getTotalLength();
+rootFill.style.strokeDasharray = ROOT_LENGTH;
+rootFill.style.strokeDashoffset = ROOT_LENGTH;
+
+function getFormattedTitle(title) {
+  let userFirstName = answers[9] || 'Amiga';
+  let exName = answers[10] || 'él/ella';
+  return title.replace(/\{NOME\}/g, userFirstName).replace(/\{EX\}/g, exName);
+}
+
+function renderQuestion(){
+  const q = questions[current];
+  qEyebrow.textContent = q.eyebrow;
+  
+  let formattedTitle = getFormattedTitle(q.title).replace(/\n/g, '<br>');
+  
+  if(q.hasUrgencyNote){
+    let urgencyFormatted = getFormattedTitle(q.hasUrgencyNote).replace(/\n/g, '<br>');
+    qTitle.innerHTML = `${formattedTitle}<div class="urgency-box">${urgencyFormatted}</div>`;
+  } else {
+    qTitle.innerHTML = formattedTitle;
+  }
+
+  const totalSteps = questions.length + 2;
+  const pct = Math.round(((current + 1) / totalSteps) * 100);
+  pctLabel.textContent = pct + '%';
+  rootFill.style.strokeDashoffset = ROOT_LENGTH - (ROOT_LENGTH * ((current + 1) / totalSteps));
+  backBtn.style.visibility = current === 0 ? 'hidden' : 'visible';
+
+  qOptions.innerHTML = '';
+  textWrap.hidden = true;
+  storyWrap.hidden = true;
+  qOptions.hidden = true;
+
+  textInput.classList.remove('input-error');
+  textInput.removeAttribute('inputmode');
+  textInput.removeAttribute('maxlength');
+
+  if(q.type === 'single' || q.type === 'single_or_text'){
+    qOptions.hidden = false;
+    q.options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'option';
+      btn.textContent = opt;
+      if(answers[q.id] === opt) btn.classList.add('selected');
+      btn.onclick = () => selectOption(opt);
+      qOptions.appendChild(btn);
+    });
+
+    if(q.hasCustomInput){
+      const customWrap = document.createElement('div');
+      customWrap.style.marginTop = '10px';
+      
+      const inp = document.createElement('input');
+      inp.className = 'text-input';
+      inp.placeholder = q.placeholder || 'Escribe aquí...';
+      inp.value = (answers[q.id] && !q.options.includes(answers[q.id])) ? answers[q.id] : '';
+      
+      const cBtn = document.createElement('button');
+      cBtn.className = 'continue-btn';
+      cBtn.style.marginTop = '10px';
+      cBtn.textContent = 'Continuar >';
+      cBtn.onclick = () => {
+        const val = inp.value.trim();
+        if(val) selectOption(val);
+      };
+
+      customWrap.appendChild(inp);
+      customWrap.appendChild(cBtn);
+      qOptions.appendChild(customWrap);
+    }
+
+  } else if(q.type === 'text' || q.type === 'date') {
+    textWrap.hidden = false;
+    textInput.value = answers[q.id] || '';
+    textInput.placeholder = q.placeholder || '';
+    textHint.textContent = q.hint || '';
+    textHint.classList.remove('error-text');
+
+    if(q.type === 'date'){
+      textInput.setAttribute('inputmode', 'numeric');
+      textInput.setAttribute('maxlength', '10');
+    }
+
+    textInput.focus();
+
+  } else if(q.type === 'story') {
+    storyWrap.hidden = false;
+    storyContent.innerHTML = `
+      <img src="https://lp.iaatende.click/wp-content/uploads/2026/07/foto.jpg" alt="María Fernanda Salazar" class="profile-photo" width="100" height="100" loading="lazy">
+      <p style="text-align: center; font-weight: 600; color: var(--ink); margin-bottom: 12px;">Mi nombre es María Fernanda Salazar</p>
+      <p>Desde hace más de 9 años, mi misión ha sido una sola: usar el conocimiento que heredé de mi familia para ayudar a mujeres como tú que tienen el corazón roto.</p>
+      <p>He dedicado mi vida a demostrar que para todo sufrimiento de amor, siempre existe un camino de regreso.</p>
+
+      <div class="carousel-hint">👈 Desliza para ver más 👉</div>
+      <div class="carousel-container">
+        <div class="carousel-item">
+          <img src="https://lp.iaatende.click/wp-content/uploads/2026/07/testimonial-01.webp" alt="Testimonio 1" width="300" height="400" loading="lazy">
+        </div>
+        <div class="carousel-item">
+          <img src="https://lp.iaatende.click/wp-content/uploads/2026/07/testimonial-02.webp" alt="Testimonio 2" width="300" height="400" loading="lazy">
+        </div>
+      </div>
+    `;
+  }
+}
+
+textInput?.addEventListener('input', (e) => {
+  const q = questions[current];
+  if(q && q.type === 'date'){
+    let v = e.target.value.replace(/\D/g, '');
+    if (v.length > 8) v = v.slice(0, 8);
+
+    if (v.length >= 5) {
+      e.target.value = `${v.slice(0,2)}/${v.slice(2,4)}/${v.slice(4)}`;
+    } else if (v.length >= 3) {
+      e.target.value = `${v.slice(0,2)}/${v.slice(2)}`;
+    } else {
+      e.target.value = v;
+    }
+  }
+});
+
+function isValidDateString(str){
+  if(!/^\d{2}\/\d{2}\/\d{4}$/.test(str)) return false;
+  const parts = str.split('/');
+  const day = parseInt(parts[0], 10);
+  const month = parseInt(parts[1], 10);
+  const year = parseInt(parts[2], 10);
+
+  if(month < 1 || month > 12) return false;
+  if(day < 1 || day > 31) return false;
+  if(year < 1920 || year > 2018) return false;
+
+  return true;
+}
+
+function selectOption(opt){
+  const q = questions[current];
+  answers[q.id] = opt;
+  advance();
+}
+
+function submitText(){
+  const q = questions[current];
+  const val = textInput.value.trim();
+
+  if(q.type === 'date'){
+    if(!isValidDateString(val)){
+      textInput.classList.add('input-error');
+      textHint.textContent = 'Por favor, ingresa una fecha válida (DD/MM/AAAA)';
+      textHint.classList.add('error-text');
+      textInput.focus();
+      return;
+    }
+  }
+
+  if(!val) { textInput.focus(); return; }
+  answers[q.id] = val;
+  advance();
+}
+
+textInput?.addEventListener('keydown', (e) => {
+  if(e.key === 'Enter') submitText();
+});
+
+function advance(){
+  if(current < questions.length - 1){
+    current++;
+    renderQuestion();
+  } else {
+    showAnalyzing();
+  }
+}
+
+function goBack(){
+  if(current > 0){
+    current--;
+    renderQuestion();
+  }
+}
+
+function startQuiz(){
+  document.getElementById('landing-view').hidden = true;
+  qView.hidden = false;
+  renderQuestion();
+}
+
+/* ============ Q21: ANALYZING SCREEN ============ */
+function showAnalyzing(){
+  qView.hidden = true;
+  analyzingView.hidden = false;
+
+  const userName = (answers[9] || 'TÚ').toUpperCase();
+  const exName = (answers[10] || 'TU AMOR').toUpperCase();
+
+  document.getElementById('analyzing-desc').innerHTML = 
+    `Estamos finalizando los últimos detalles de tu ritual personalizado...<br><br><b>${userName}</b> y <b>${exName}</b> están más cerca que nunca de reencontrarse.`;
+
+  const ringFg = document.getElementById('ring-fg');
+  const ringPct = document.getElementById('ring-pct');
+  const stepText = document.getElementById('analyzing-step');
+  const RING_LEN = ringFg.getTotalLength();
+  ringFg.style.strokeDasharray = RING_LEN;
+
+  const steps = [
+    'ANALIZANDO CONEXIÓN ASTRAL',
+    'CALCULANDO COMPATIBILIDAD ENERGÉTICA',
+    'FINALIZANDO DETALLES DEL RITUAL',
+    'RITUAL LISTO'
+  ];
+
+  let pct = 23;
+  const totalDuration = 3500;
+  const stepTime = 30;
+  const increment = (100 - 23) / (totalDuration / stepTime);
+
+  const interval = setInterval(() => {
+    pct = Math.min(100, pct + increment);
+    const offset = RING_LEN - (RING_LEN * pct/100);
+    ringFg.style.strokeDashoffset = offset;
+    ringPct.textContent = Math.round(pct) + '%';
+    const stepIdx = Math.min(steps.length - 1, Math.floor(((pct - 23)/77) * steps.length));
+    stepText.textContent = steps[stepIdx];
+
+    if(pct >= 100){
+      clearInterval(interval);
+      setTimeout(showResult, 500);
+    }
+  }, stepTime);
+}
+
+/* ============ Q22: RESULT / VSL SCREEN ============ */
+function showResult(){
+  analyzingView.hidden = true;
+  resultView.hidden = false;
+
+  const userName = answers[9] || 'Amiga';
+  const exName = answers[10] || 'él/ella';
+
+  document.getElementById('result-title').textContent = `¡${userName}, tu ritual está listo!`;
+  document.getElementById('result-subtitle').textContent = 
+    `Si activas el ritual HOY, prepárate para ver a ${exName} buscándote desesperadamente en los próximos 14 días.`;
+
+  setupDynamicDate();
+  loadWistiaPlayer();
+}
+
+function loadWistiaPlayer(){
+  const container = document.getElementById('vsl-container');
+  if(!container || container.dataset.loaded) return;
+  
+  container.dataset.loaded = "true";
+  container.innerHTML = `
+    <style>
+      wistia-player[media-id='iyhj18l755']:not(:defined) {
+        background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/iyhj18l755/swatch');
+        display: block;
+        filter: blur(5px);
+        padding-top:177.78%;
+      }
+    </style>
+    <wistia-player id="vsl-player" media-id="iyhj18l755" seo="false" aspect="0.5625"></wistia-player>
+  `;
+
+  const script1 = document.createElement('script');
+  script1.src = "https://fast.wistia.com/player.js";
+  script1.async = true;
+  document.head.appendChild(script1);
+
+  const script2 = document.createElement('script');
+  script2.src = "https://fast.wistia.com/embed/iyhj18l755.js";
+  script2.type = "module";
+  script2.async = true;
+  document.head.appendChild(script2);
+
+  setTimeout(setupVideoGate, 800);
+}
+
+function setupDynamicDate(){
+  const dateObj = new Date();
+  const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+  const day = dateObj.getDate();
+  const month = months[dateObj.getMonth()];
+  
+  const dateElement = document.getElementById('dynamic-date-note');
+  if(dateElement){
+    dateElement.textContent = `*Oferta válida hasta el ${day} de ${month} a las 23:59`;
+  }
+}
+
+function setupVideoGate(){
+  const offerWrap = document.getElementById('offer-wrap');
+  const lockNote = document.getElementById('buy-lock-note');
+  const player = document.getElementById('vsl-player');
+  const REVEAL_AT_SECONDS = 300; // 5 minutos
+  let revealed = false;
+
+  function reveal(){
+    if(!revealed){
+      revealed = true;
+      offerWrap.classList.add('visible');
+      if(lockNote) lockNote.style.display = 'none';
+    }
+  }
+
+  if(player){
+    player.addEventListener('time-update', () => {
+      if(player.currentTime >= REVEAL_AT_SECONDS) reveal();
+    });
+    player.addEventListener('end', reveal);
+  }
+}
+
+document.getElementById('buy-btn').addEventListener('click', () => {
+  window.location.href = 'https://pay.hotmart.com/P106845801O';
+});
+</script>
+
+</body>
+</html>
