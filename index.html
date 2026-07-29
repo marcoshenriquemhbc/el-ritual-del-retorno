@@ -9,6 +9,136 @@
 <link rel="preconnect" href="https://lp.iaatende.click" crossorigin>
 <link rel="preconnect" href="https://fast.wistia.com" crossorigin>
 
+<!-- 1º: Meta Pixel Base Code -->
+<script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '2073069586868708');
+  fbq('track', 'PageView');
+</script>
+
+<!-- 2º: Script de Captura de UTMs, src (Hotmart), Cookies, fbc/fbp e Beacon pro n8n -->
+<script>
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+  }
+
+  function setCookie(name, value, days) {
+    let expires = "";
+    if (days) {
+      const date = new Date();
+      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+      expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "") + expires + "; path=/";
+  }
+
+  // Lista master de parâmetros para rastrear e salvar nos cookies.
+  // 'src' e 'sck' são os únicos identificadores que o Hotmart devolve
+  // no webhook de compra (dentro do objeto "origin") — por isso são
+  // os únicos que usamos como chave de matching.
+  const paramsToTrack = [
+    'utm_source',
+    'utm_medium',
+    'utm_campaign',
+    'utm_term',
+    'utm_content',
+    'src',
+    'sck'
+  ];
+
+  // Captura e armazena parâmetros da URL em cookies (persistência)
+  (function captureURLParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    paramsToTrack.forEach(param => {
+      if (urlParams.has(param)) {
+        setCookie(param, urlParams.get(param), 30);
+      }
+    });
+  })();
+
+  // Se não veio 'src' na URL (caso mais comum — tráfego direto do anúncio),
+  // geramos nosso próprio identificador único e o carregamos no campo 'src'.
+  // É esse valor que o Hotmart vai devolver no objeto "origin" do webhook de compra.
+  function getOrCreateSrc() {
+    const existing = getCookie('src');
+    if (existing) return existing;
+    const sid = 'sess_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
+    setCookie('src', sid, 30);
+    return sid;
+  }
+  const sessionSrc = getOrCreateSrc();
+
+  // Captura manual de fbc a partir do fbclid na URL — fallback caso o
+  // cookie automático do Pixel ainda não tenha sido gravado a tempo.
+  function ensureFbc() {
+    const existing = getCookie('_fbc');
+    if (existing) return existing;
+    const urlParams = new URLSearchParams(window.location.search);
+    const fbclid = urlParams.get('fbclid');
+    if (fbclid) {
+      const fbc = 'fb.1.' + Date.now() + '.' + fbclid;
+      setCookie('_fbc', fbc, 90);
+      return fbc;
+    }
+    return null;
+  }
+  const capturedFbc = ensureFbc();
+  const capturedFbp = getCookie('_fbp'); // deixamos o Pixel criar esse sozinho
+
+  // Constrói o link do Hotmart anexando apenas os parâmetros que o Hotmart
+  // realmente reconhece e devolve no webhook (utm_*, src, sck).
+  // fbp/fbc NÃO vão na URL — ficam guardados no Supabase, casados pelo 'src'.
+  function buildHotmartLink(baseUrl) {
+    const url = new URL(baseUrl);
+    paramsToTrack.forEach(param => {
+      const val = getCookie(param);
+      if (val) url.searchParams.set(param, val);
+    });
+    // garante que o src vai, mesmo que tenha acabado de ser gerado agora
+    url.searchParams.set('src', sessionSrc);
+    return url.toString();
+  }
+
+  // Placeholder — será preenchido no Passo 2, quando criarmos o Webhook
+  // node no n8n que recebe isso e grava no Supabase.
+  const N8N_CAPTURE_WEBHOOK_URL = "https://n8n.iaatende.click/webhook/landing-page";
+
+  function sendCaptureBeacon() {
+    if (!N8N_CAPTURE_WEBHOOK_URL || N8N_CAPTURE_WEBHOOK_URL.indexOf('http') !== 0) return;
+    const payload = {
+      src: sessionSrc,
+      fbc: capturedFbc,
+      fbp: capturedFbp,
+      user_agent: navigator.userAgent,
+      event_source_url: window.location.href,
+      utm_source: getCookie('utm_source'),
+      utm_campaign: getCookie('utm_campaign'),
+      utm_medium: getCookie('utm_medium'),
+      utm_content: getCookie('utm_content')
+    };
+    fetch(N8N_CAPTURE_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      keepalive: true,
+      body: JSON.stringify(payload)
+    }).catch(function(){ /* falha silenciosa: não bloqueia a navegação */ });
+  }
+
+  // Dispara assim que a página carrega — garante cobertura mesmo que a
+  // pessoa demore pra chegar no botão de compra.
+  sendCaptureBeacon();
+</script>
+
 <style>
   :root{
     --bg: #0A0908;
@@ -1303,8 +1433,10 @@ function setupVideoGate(){
   }
 }
 
+/* Evento de clique do Botão de Compra integrado com a função buildHotmartLink */
 document.getElementById('buy-btn').addEventListener('click', () => {
-  window.location.href = 'https://pay.hotmart.com/P106845801O';
+  const hotmartBaseUrl = 'https://pay.hotmart.com/P106845801O?checkoutMode=10';
+  window.location.href = buildHotmartLink(hotmartBaseUrl);
 });
 </script>
 
