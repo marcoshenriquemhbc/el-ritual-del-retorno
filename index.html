@@ -856,7 +856,7 @@
         <div class="offer-card">
           <div class="offer-title">El Ritual del retorno.</div>
           <div class="old-price">$297,00</div>
-          <div class="new-price">$14,90*</div>
+          <div class="new-price">$17,90*</div>
           <div class="price-sub">Pago único, sin cuotas mensuales</div>
 
           <div class="deliverables">
@@ -1374,14 +1374,14 @@ function loadWistiaPlayer(){
   container.dataset.loaded = "true";
   container.innerHTML = `
     <style>
-      wistia-player[media-id='cr86ycj6qs']:not(:defined) {
-        background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/cr86ycj6qs/swatch');
+      wistia-player[media-id='m4pv3ygruy']:not(:defined) {
+        background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/m4pv3ygruy/swatch');
         display: block;
         filter: blur(5px);
         padding-top:177.78%;
       }
     </style>
-    <wistia-player id="vsl-player" media-id="cr86ycj6qs" seo="false" aspect="0.5625"></wistia-player>
+    <wistia-player id="vsl-player" media-id="m4pv3ygruy" seo="false" aspect="0.5625"></wistia-player>
   `;
 
   const script1 = document.createElement('script');
@@ -1390,7 +1390,7 @@ function loadWistiaPlayer(){
   document.head.appendChild(script1);
 
   const script2 = document.createElement('script');
-  script2.src = "https://fast.wistia.com/embed/cr86ycj6qs.js";
+  script2.src = "https://fast.wistia.com/embed/m4pv3ygruy.js";
   script2.type = "module";
   script2.async = true;
   document.head.appendChild(script2);
@@ -1414,7 +1414,7 @@ function setupVideoGate(){
   const offerWrap = document.getElementById('offer-wrap');
   const lockNote = document.getElementById('buy-lock-note');
   const player = document.getElementById('vsl-player');
-  const REVEAL_AT_SECONDS = 60; // Configurado para 1 minuto (60 segundos)
+  const REVEAL_AT_SECONDS = 395; // 06:35 (6*60 + 35 segundos)
   let revealed = false;
 
   function reveal(){
