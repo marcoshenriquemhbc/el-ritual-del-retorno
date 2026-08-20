@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>El Ritual del Retorno — Diagnóstico Energético</title>
+<title>El ʳⁱᵗᵘᵃˡ del Retorno — Diagnóstico Energético</title>
 
 <!-- Preconnect para rápida conexión de origens externas -->
 <link rel="preconnect" href="https://lp.iaatende.click" crossorigin>
@@ -42,10 +42,6 @@
     document.cookie = name + "=" + (value || "") + expires + "; path=/";
   }
 
-  // Lista master de parâmetros para rastrear e salvar nos cookies.
-  // 'src' e 'sck' são os únicos identificadores que o Hotmart devolve
-  // no webhook de compra (dentro do objeto "origin") — por isso são
-  // os únicos que usamos como chave de matching.
   const paramsToTrack = [
     'utm_source',
     'utm_medium',
@@ -56,7 +52,6 @@
     'sck'
   ];
 
-  // Captura e armazena parâmetros da URL em cookies (persistência)
   (function captureURLParams() {
     const urlParams = new URLSearchParams(window.location.search);
     paramsToTrack.forEach(param => {
@@ -66,9 +61,6 @@
     });
   })();
 
-  // Se não veio 'src' na URL (caso mais comum — tráfego direto do anúncio),
-  // geramos nosso próprio identificador único e o carregamos no campo 'src'.
-  // É esse valor que o Hotmart vai devolver no objeto "origin" do webhook de compra.
   function getOrCreateSrc() {
     const existing = getCookie('src');
     if (existing) return existing;
@@ -78,8 +70,6 @@
   }
   const sessionSrc = getOrCreateSrc();
 
-  // Captura manual de fbc a partir do fbclid na URL — fallback caso o
-  // cookie automático do Pixel ainda não tenha sido gravado a tempo.
   function ensureFbc() {
     const existing = getCookie('_fbc');
     if (existing) return existing;
@@ -93,24 +83,18 @@
     return null;
   }
   const capturedFbc = ensureFbc();
-  const capturedFbp = getCookie('_fbp'); // deixamos o Pixel criar esse sozinho
+  const capturedFbp = getCookie('_fbp');
 
-  // Constrói o link do Hotmart anexando apenas os parâmetros que o Hotmart
-  // realmente reconhece e devolve no webhook (utm_*, src, sck).
-  // fbp/fbc NÃO vão na URL — ficam guardados no Supabase, casados pelo 'src'.
   function buildHotmartLink(baseUrl) {
     const url = new URL(baseUrl);
     paramsToTrack.forEach(param => {
       const val = getCookie(param);
       if (val) url.searchParams.set(param, val);
     });
-    // garante que o src vai, mesmo que tenha acabado de ser gerado agora
     url.searchParams.set('src', sessionSrc);
     return url.toString();
   }
 
-  // Placeholder — será preenchido no Passo 2, quando criarmos o Webhook
-  // node no n8n que recebe isso e grava no Supabase.
   const N8N_CAPTURE_WEBHOOK_URL = "https://n8n.iaatende.click/webhook/landing-page";
 
   function sendCaptureBeacon() {
@@ -131,11 +115,9 @@
       headers: { 'Content-Type': 'application/json' },
       keepalive: true,
       body: JSON.stringify(payload)
-    }).catch(function(){ /* falha silenciosa: não bloqueia a navegação */ });
+    }).catch(function(){});
   }
 
-  // Dispara assim que a página carrega — garante cobertura mesmo que a
-  // pessoa demore pra chegar no botão de compra.
   sendCaptureBeacon();
 </script>
 
@@ -196,7 +178,6 @@
     flex-direction:column;
   }
 
-  /* ---------- root/vine progress signature ---------- */
   .root-progress{
     width:100%;
     padding: 22px 24px 8px;
@@ -227,7 +208,6 @@
     text-transform: uppercase;
   }
 
-  /* ---------- question area ---------- */
   .stage{
     flex:1;
     display:flex;
@@ -255,7 +235,6 @@
     margin: 0 0 22px;
   }
 
-  /* Bloco de alerta suave no diagnóstico */
   .urgency-box{
     background: rgba(229, 72, 77, 0.12);
     border-left: 3px solid #E5484D;
@@ -365,7 +344,6 @@
     opacity: 0.75;
   }
 
-  /* ---------- landing screen ---------- */
   #landing-view{
     display:flex;
     flex-direction:column;
@@ -440,7 +418,6 @@
     color: var(--ink-soft);
   }
 
-  /* ---------- custom story screen (Q12) ---------- */
   .story-box{
     background: rgba(255,255,255,0.03);
     border-radius: 16px;
@@ -464,7 +441,6 @@
   .story-box p{ margin: 0 0 12px; text-align: left; }
   .story-box p:last-child{ margin: 0; }
 
-  /* Carrusel de Testimonios */
   .carousel-container{
     margin: 16px 0;
     overflow-x: auto;
@@ -507,7 +483,6 @@
     gap: 4px;
   }
 
-  /* ---------- analyzing screen ---------- */
   .analyzing{
     flex:1;
     display:flex;
@@ -556,7 +531,6 @@
     min-height: 14px;
   }
 
-  /* ---------- result / VSL screen ---------- */
   .result-stage{
     flex:1;
     display:flex;
@@ -610,7 +584,6 @@
     min-height: 200px;
   }
 
-  /* Area de Oferta Oculta */
   .offer-wrap{
     opacity: 0;
     transform: translateY(12px);
@@ -754,32 +727,30 @@
 
 <div class="phone" id="phone">
 
-  <!-- LANDING SCREEN -->
   <div id="landing-view">
     <div class="landing-stage">
       <div class="landing-image">
         <img src="https://lp.iaatende.click/wp-content/uploads/2026/07/Gemini_Generated_Image_bfz12rbfz12rbfz1-1.png" 
-             alt="El Ritual del Retorno" 
+             alt="El ʳⁱᵗᵘᵃˡ del Retorno" 
              width="260" 
              height="260" 
              fetchpriority="high" 
              loading="eager">
       </div>
 
-      <h1 class="landing-headline">Haz este ritual de amor y verás a la persona que amas volver buscándote en torno a 7 días</h1>
+      <h1 class="landing-headline">Haz este ʳⁱᵗᵘᵃˡ de amor y verás a la persona que amas volver buscándote en torno a 7 días</h1>
       <p class="landing-subheadline">Sin karma ni consecuencias negativas para ti ni para él</p>
 
-      <button class="start-btn" id="start-btn" onclick="startQuiz()">Iniciar Diagnóstico</button>
+      <button class="start-btn" id="start-btn" onclick="startQuiz()">ʳⁱᵗᵘᵃˡ Energético Personalizado</button>
 
       <div class="trust-line">
         <span>🔒 100% Confidencial y Privado</span>
-        <span>🔥 Ritual Energético Personalizado</span>
+        <span>🔥 ʳⁱᵗᵘᵃˡ Energético Personalizado</span>
       </div>
     </div>
-    <footer class="brand">© 2026 – EL RITUAL DEL RETORNO</footer>
+    <footer class="brand">© 2026 – EL ʳⁱᵗᵘᵃˡ DEL RETORNO</footer>
   </div>
 
-  <!-- QUIZ SCREENS -->
   <div id="quiz-view" hidden>
     <div class="root-progress">
       <div class="progress-meta">
@@ -806,14 +777,13 @@
 
       <div id="story-wrap" hidden>
         <div class="story-box" id="story-content"></div>
-        <button class="continue-btn" onclick="advance()">Continuar mi ritual ></button>
+        <button class="continue-btn" onclick="advance()">Continuar mi ʳⁱᵗᵘᵃˡ ></button>
       </div>
     </div>
 
-    <footer class="brand">© 2026 – EL RITUAL DEL RETORNO</footer>
+    <footer class="brand">© 2026 – EL ʳⁱᵗᵘᵃˡ DEL RETORNO</footer>
   </div>
 
-  <!-- ANALYZING SCREEN (Q21) -->
   <div id="analyzing-view" hidden>
     <div class="analyzing">
       <div class="analyzing-step" id="analyzing-step">ORGANIZANDO TUS RESPUESTAS</div>
@@ -824,17 +794,16 @@
         </svg>
         <div class="ring-pct" id="ring-pct">23%</div>
       </div>
-      <p id="analyzing-desc">Estamos finalizando los últimos detalles de tu ritual personalizado... Tú y tu amor están más cerca que nunca de reencontrarse.</p>
+      <p id="analyzing-desc">Estamos finalizando los últimos detalles de tu ʳⁱᵗᵘᵃˡ personalizado... Tú y tu amor están más cerca que nunca de reencontrarse.</p>
     </div>
   </div>
 
-  <!-- RESULT / VSL SCREEN (Q22) -->
   <div id="result-view" hidden>
     <div class="result-stage">
       <div class="result-hero">
         <div class="eyebrow">Aviso Importante</div>
-        <h2 id="result-title">¡Tu ritual está listo!</h2>
-        <p id="result-subtitle">Si activas el ritual HOY, prepárate para ver a tu amor buscándote desesperadamente en los próximos 14 días.</p>
+        <h2 id="result-title">¡Tu ʳⁱᵗᵘᵃˡ está listo!</h2>
+        <p id="result-subtitle">Si activas el ʳⁱᵗᵘᵃˡ HOY, prepárate para ver a tu amor buscándote desesperadamente en los próximos 14 días.</p>
         <ul class="bullet-list">
           <li>🔥 No importa si te bloqueó.</li>
           <li>🔥 No importa si está con otra persona.</li>
@@ -844,24 +813,23 @@
 
       <div class="video-block">
         <div class="video-frame" id="vsl-container">
-          <!-- Wistia player injetado dinamicamente -->
         </div>
       </div>
 
       <div class="buy-lock-note" id="buy-lock-note">🔒 Disponible después de ver el video</div>
 
       <div class="offer-wrap" id="offer-wrap">
-        <div class="discount-tag">Último día con 93,97% de descuento</div>
+        <div class="discount-tag">Último día com 93,97% de descuento</div>
         
         <div class="offer-card">
-          <div class="offer-title">El Ritual del retorno.</div>
+          <div class="offer-title">El ʳⁱᵗᵘᵃˡ del retorno.</div>
           <div class="old-price">$297,00</div>
           <div class="new-price">$17,90*</div>
           <div class="price-sub">Pago único, sin cuotas mensuales</div>
 
           <div class="deliverables">
             <ul>
-              <li>✔ Tu ritual 100% personalizado</li>
+              <li>✔ Tu ʳⁱᵗᵘᵃˡ 100% personalizado</li>
               <li>✔ 3 regalos especiales</li>
               <li>✔ 1 regalo secreto</li>
               <li>✔ Garantía incondicional de 30 días</li>
@@ -869,14 +837,14 @@
             </ul>
           </div>
 
-          <button class="buy-btn" id="buy-btn">¡SOLO QUEDAN 6 RITUALES! ></button>
+          <button class="buy-btn" id="buy-btn">¡SOLO QUEDAN 6 ʳⁱᵗᵘᵃˡES! ></button>
           
-          <div class="scarcity-note">¡SOLO QUEDAN 6 RITUALES!</div>
+          <div class="scarcity-note">¡SOLO QUEDAN 6 ʳⁱᵗᵘᵃˡES!</div>
           <div class="date-note" id="dynamic-date-note">*Oferta válida hasta hoy a las 23:59</div>
           <div class="legal-note">*Valor aproximado, en el siguiente paso se pueden agregar impuestos y tasas específicas de tu país.</div>
         </div>
         
-        <footer class="brand" style="margin-top: 10px;">© 2026 – El Ritual del retorno.</footer>
+        <footer class="brand" style="margin-top: 10px;">© 2026 – El ʳⁱᵗᵘᵃˡ del retorno.</footer>
       </div>
 
     </div>
@@ -885,19 +853,13 @@
 </div>
 
 <script>
-/* ============ QUESTION DATA ============ */
 const questions = [
   { 
     id: 2, 
     type: 'single_or_text', 
     eyebrow: 'Motivo de la Separación', 
     title: '¿Cuál fue el verdadero motivo de su separación?',
-    options: [
-      'Discutíamos mucho.',
-      'La relación se fue enfriando poco a poco.',
-      'Me cambió por otra persona.',
-      'Celos frecuentes.'
-    ],
+    options: ['Discutíamos mucho.', 'La relación se fue enfriando poco a poco.', 'Me cambió por otra persona.', 'Celos frecuentes.'],
     hasCustomInput: true,
     placeholder: 'Escribe otro motivo...'
   },
@@ -906,70 +868,42 @@ const questions = [
     type: 'single', 
     eyebrow: 'Tiempo Intentándolo', 
     title: '¿Hace cuánto tiempo estás intentando reconquistar a tu ex?',
-    options: [
-      'Hace unos días',
-      'Hace unas semanas',
-      'Llevo meses insistiendo con la esperanza'
-    ] 
+    options: ['Hace unos días', 'Hace unas semanas', 'Llevo meses insistiendo con la esperanza'] 
   },
   { 
     id: 4, 
     type: 'single', 
     eyebrow: 'Contacto Actual', 
     title: '¿Aún mantienes contacto con tu amor?',
-    options: [
-      'No, me bloqueó de todas partes',
-      'Perdimos el contacto',
-      'Hablamos muy rara vez',
-      'A veces hablamos, pero de forma fría',
-      'Aún hablamos con frecuencia'
-    ] 
+    options: ['No, me bloqueó de todas partes', 'Perdimos el contacto', 'Hablamos muy rara vez', 'A veces hablamos, pero de forma fría', 'Aún hablamos con frecuencia'] 
   },
   { 
     id: 5, 
     type: 'single', 
     eyebrow: 'Historial', 
     title: '¿Cómo era el sentimiento al inicio de la relación?',
-    options: [
-      'Era intenso y siempre tuvimos mucha conexión',
-      'Inestable, a veces cercano, a veces frío',
-      'Siempre fue frío, nunca fue de demostrar sus sentimientos'
-    ] 
+    options: ['Era intenso y siempre tuvimos mucha conexión', 'Inestable, a veces cercano, a veces frío', 'Siempre fue frío, nunca fue de demostrar sus sentimientos'] 
   },
   { 
     id: 6, 
     type: 'single', 
     eyebrow: 'Decisión', 
     title: '¿Quién decidió terminar la relación?',
-    options: [
-      'Yo',
-      'Él/Ella',
-      'Fue una decisión de los dos',
-      'Simplemente sucedió'
-    ] 
+    options: ['Yo', 'Él/Ella', 'Fue una decisión de los dos', 'Simplemente sucedió'] 
   },
   { 
     id: 7, 
     type: 'single', 
     eyebrow: 'Sentimiento', 
     title: '¿Cómo te sentiste después de la separación?',
-    options: [
-      'Me arrepentí inmediatamente',
-      'Intenté seguir adelante, pero pronto me arrepentí',
-      'Tardé en sentirlo, pero hoy me arrepentí de verdad',
-      'No le di mucha importancia'
-    ] 
+    options: ['Me arrepentí inmediatamente', 'Intenté seguir adelante, pero pronto me arrepentí', 'Tardé en sentirlo, pero hoy me arrepentí de verdad', 'No le di mucha importancia'] 
   },
   { 
     id: 8, 
     type: 'single', 
     eyebrow: 'Intentos Anteriores', 
     title: '¿Ya has intentado hacer algo para reconquistar a tu amor?',
-    options: [
-      'Sí, intenté algunos rituales que encontré en internet',
-      'Sí, ya pagué por algunos trabajos, pero nada funcionó',
-      'Aún no, esta es la primera vez que busco algo así'
-    ] 
+    options: ['Sí, intenté algunos ʳⁱᵗᵘᵃˡes que encontré en internet', 'Sí, ya pagué por algunos trabajos, pero nada funcionó', 'Aún no, esta es la primera vez que busco algo así'] 
   },
   { 
     id: 9, 
@@ -1005,98 +939,58 @@ const questions = [
     id: 13, 
     type: 'single', 
     eyebrow: 'Diagnóstico Exclusivo', 
-    title: '{NOME}, responde algunas preguntas más para que pueda preparar tu ritual exclusivo.',
+    title: '{NOME}, responde algunas preguntas más para que pueda preparar tu ʳⁱᵗᵘᵃˡ exclusivo.',
     hasUrgencyNote: 'Si no actúas ahora, puede seguir adelante para siempre...\n\n¿Qué es lo que más te duele en esta lucha por tenerlo/a de vuelta?',
-    options: [
-      'Me ignora como si nunca me hubiera amado',
-      'Está con otra persona y eso me destruye y me carcome por dentro',
-      'Lo intento, pero parece que nada funciona',
-      'El miedo al rechazo me paraliza por completo',
-      'Todas las opciones anteriores'
-    ] 
+    options: ['Me ignora como si nunca me hubiera amado', 'Está con otra persona y eso me destruye y me carcome por dentro', 'Lo intento, pero parece que nada funciona', 'El miedo al rechazo me paraliza por completo', 'Todas las opciones anteriores'] 
   },
   { 
     id: 14, 
     type: 'single', 
     eyebrow: 'Reflexión', 
     title: '¿Por qué crees que aún no has logrado reconquistar a tu ex?',
-    options: [
-      'Falta de comunicación',
-      'Heridas del pasado',
-      'Otras personas interfiriendo',
-      'No sé el motivo exacto'
-    ] 
+    options: ['Falta de comunicación', 'Heridas del pasado', 'Otras personas interfiriendo', 'No sé el motivo exacto'] 
   },
   { 
     id: 15, 
     type: 'single', 
     eyebrow: 'Sentimiento', 
     title: '{NOME}, ¿cómo te sientes cuando piensas en el fin de la relación?',
-    options: [
-      'Tristeza profunda',
-      'Ansiedad',
-      'Mucha rabia / enojo',
-      'No siento nada'
-    ] 
+    options: ['Tristeza profunda', 'Ansiedad', 'Mucha rabia / enojo', 'No siento nada'] 
   },
   { 
     id: 16, 
     type: 'single', 
     eyebrow: 'Recuerdos', 
     title: '¿Sueles revivir mentalmente momentos específicos de la relación?',
-    options: [
-      'Sí, todos los días',
-      'Sí, a veces',
-      'Rara vez',
-      'Nunca me ha pasado'
-    ] 
+    options: ['Sí, todos los días', 'Sí, a veces', 'Rara vez', 'Nunca me ha pasado'] 
   },
   { 
     id: 17, 
     type: 'single', 
     eyebrow: 'Hábitos', 
     title: '¿Tienes el hábito de revisar las redes sociales de tu ex?',
-    options: [
-      'Sí, todos los días',
-      'Sí, a veces',
-      'Rara vez',
-      'No, no me mantengo al tanto'
-    ] 
+    options: ['Sí, todos los días', 'Sí, a veces', 'Rara vez', 'No, no me mantengo al tanto'] 
   },
   { 
     id: 18, 
     type: 'single', 
     eyebrow: 'Impacto', 
     title: '¿Sientes que esta situación está afectando otras áreas de tu vida?',
-    options: [
-      'Sí, mi salud emocional',
-      'Sí, mi desempeño profesional',
-      'Sí, estoy teniendo noches con mal sueño',
-      'Todas las opciones anteriores'
-    ] 
+    options: ['Sí, mi salud emocional', 'Sí, mi desempeño profesional', 'Sí, estoy teniendo noches con mal sueño', 'Todas las opciones anteriores'] 
   },
   { 
     id: 19, 
     type: 'single', 
     eyebrow: 'Objetivo', 
-    title: '¿Qué resultado te gustaría alcanzar con este ritual?',
-    options: [
-      'Que vuelva completamente enamorado/a',
-      'Que me pida perdón y reconsidere la separación',
-      'Que se aleje de cualquier otra persona',
-      'Todas las opciones anteriores'
-    ] 
+    title: '¿Qué resultado te gustaría alcanzar con este ʳⁱᵗᵘᵃˡ?',
+    options: ['Que vuelva completamente enamorado/a', 'Que me pida perdón y reconsidere la separación', 'Que se aleje de cualquier otra persona', 'Todas las opciones anteriores'] 
   },
   { 
     id: 20, 
     type: 'single', 
     eyebrow: 'Decisión Final', 
     title: 'Si pudieras hacer que tu ex volviera HOY, ¿lo harías?',
-    options: [
-      '¡Sí, inmediatamente!',
-      'Quiero estar seguro/a de que funcionará, no importa cuánto tome',
-      'Ya no me importa tanto'
-    ] 
+    options: ['¡Sí, inmediatamente!', 'Quiero estar seguro/a de que funcionará, no importa cuánto tome', 'Ya no me importa tanto'] 
   }
 ];
 
@@ -1132,31 +1026,23 @@ function getFormattedTitle(title) {
 function renderQuestion(){
   const q = questions[current];
   qEyebrow.textContent = q.eyebrow;
-  
   let formattedTitle = getFormattedTitle(q.title).replace(/\n/g, '<br>');
-  
   if(q.hasUrgencyNote){
     let urgencyFormatted = getFormattedTitle(q.hasUrgencyNote).replace(/\n/g, '<br>');
     qTitle.innerHTML = `${formattedTitle}<div class="urgency-box">${urgencyFormatted}</div>`;
   } else {
     qTitle.innerHTML = formattedTitle;
   }
-
   const totalSteps = questions.length + 2;
   const pct = Math.round(((current + 1) / totalSteps) * 100);
   pctLabel.textContent = pct + '%';
   rootFill.style.strokeDashoffset = ROOT_LENGTH - (ROOT_LENGTH * ((current + 1) / totalSteps));
   backBtn.style.visibility = current === 0 ? 'hidden' : 'visible';
-
   qOptions.innerHTML = '';
   textWrap.hidden = true;
   storyWrap.hidden = true;
   qOptions.hidden = true;
-
   textInput.classList.remove('input-error');
-  textInput.removeAttribute('inputmode');
-  textInput.removeAttribute('maxlength');
-
   if(q.type === 'single' || q.type === 'single_or_text'){
     qOptions.hidden = false;
     q.options.forEach(opt => {
@@ -1167,276 +1053,79 @@ function renderQuestion(){
       btn.onclick = () => selectOption(opt);
       qOptions.appendChild(btn);
     });
-
     if(q.hasCustomInput){
       const customWrap = document.createElement('div');
       customWrap.style.marginTop = '10px';
-      
       const inp = document.createElement('input');
       inp.className = 'text-input';
       inp.placeholder = q.placeholder || 'Escribe aquí...';
-      inp.value = (answers[q.id] && !q.options.includes(answers[q.id])) ? answers[q.id] : '';
-      
       const cBtn = document.createElement('button');
       cBtn.className = 'continue-btn';
       cBtn.style.marginTop = '10px';
       cBtn.textContent = 'Continuar >';
-      cBtn.onclick = () => {
-        const val = inp.value.trim();
-        if(val) selectOption(val);
-      };
-
+      cBtn.onclick = () => { if(inp.value.trim()) selectOption(inp.value.trim()); };
       customWrap.appendChild(inp);
       customWrap.appendChild(cBtn);
       qOptions.appendChild(customWrap);
     }
-
   } else if(q.type === 'text' || q.type === 'date') {
     textWrap.hidden = false;
     textInput.value = answers[q.id] || '';
-    textInput.placeholder = q.placeholder || '';
-    textHint.textContent = q.hint || '';
-    textHint.classList.remove('error-text');
-
-    if(q.type === 'date'){
-      textInput.setAttribute('inputmode', 'numeric');
-      textInput.setAttribute('maxlength', '10');
-    }
-
     textInput.focus();
-
   } else if(q.type === 'story') {
     storyWrap.hidden = false;
-    storyContent.innerHTML = `
-      <img src="https://lp.iaatende.click/wp-content/uploads/2026/07/foto.jpg" alt="María Fernanda Salazar" class="profile-photo" width="100" height="100" loading="lazy">
+    storyContent.innerHTML = `<img src="https://lp.iaatende.click/wp-content/uploads/2026/07/foto.jpg" alt="María Fernanda Salazar" class="profile-photo" width="100" height="100" loading="lazy">
       <p style="text-align: center; font-weight: 600; color: var(--ink); margin-bottom: 12px;">Mi nombre es María Fernanda Salazar</p>
-      <p>Desde hace más de 9 años, mi misión ha sido una sola: usar el conocimiento que heredé de mi familia para ayudar a mujeres como tú que tienen el corazón roto.</p>
-      <p>He dedicado mi vida a demostrar que para todo sufrimiento de amor, siempre existe un camino de regreso.</p>
-
-      <div class="carousel-hint">👈 Desliza para ver más 👉</div>
-      <div class="carousel-container">
-        <div class="carousel-item">
-          <img src="https://lp.iaatende.click/wp-content/uploads/2026/07/testimonial-01.webp" alt="Testimonio 1" width="300" height="400" loading="lazy">
-        </div>
-        <div class="carousel-item">
-          <img src="https://lp.iaatende.click/wp-content/uploads/2026/07/testimonial-02.webp" alt="Testimonio 2" width="300" height="400" loading="lazy">
-        </div>
-      </div>
-    `;
+      <p>Desde hace más de 9 años, mi misión ha sido una sola: usar el conocimiento que heredé de familia para ayudar a mujeres como tú que tienen el corazón roto.</p>
+      <p>He dedicado mi vida a demostrar que para todo sufrimiento de amor, siempre existe un camino de regreso.</p>`;
   }
 }
 
-textInput?.addEventListener('input', (e) => {
-  const q = questions[current];
-  if(q && q.type === 'date'){
-    let v = e.target.value.replace(/\D/g, '');
-    if (v.length > 8) v = v.slice(0, 8);
+function selectOption(opt){ answers[questions[current].id] = opt; advance(); }
+function submitText(){ if(textInput.value.trim()){ answers[questions[current].id] = textInput.value.trim(); advance(); } }
+function advance(){ if(current < questions.length - 1){ current++; renderQuestion(); } else { showAnalyzing(); } }
+function goBack(){ if(current > 0){ current--; renderQuestion(); } }
+function startQuiz(){ document.getElementById('landing-view').hidden = true; qView.hidden = false; renderQuestion(); }
 
-    if (v.length >= 5) {
-      e.target.value = `${v.slice(0,2)}/${v.slice(2,4)}/${v.slice(4)}`;
-    } else if (v.length >= 3) {
-      e.target.value = `${v.slice(0,2)}/${v.slice(2)}`;
-    } else {
-      e.target.value = v;
-    }
-  }
-});
-
-function isValidDateString(str){
-  if(!/^\d{2}\/\d{2}\/\d{4}$/.test(str)) return false;
-  const parts = str.split('/');
-  const day = parseInt(parts[0], 10);
-  const month = parseInt(parts[1], 10);
-  const year = parseInt(parts[2], 10);
-
-  if(month < 1 || month > 12) return false;
-  if(day < 1 || day > 31) return false;
-  if(year < 1920 || year > 2018) return false;
-
-  return true;
-}
-
-function selectOption(opt){
-  const q = questions[current];
-  answers[q.id] = opt;
-  advance();
-}
-
-function submitText(){
-  const q = questions[current];
-  const val = textInput.value.trim();
-
-  if(q.type === 'date'){
-    if(!isValidDateString(val)){
-      textInput.classList.add('input-error');
-      textHint.textContent = 'Por favor, ingresa una fecha válida (DD/MM/AAAA)';
-      textHint.classList.add('error-text');
-      textInput.focus();
-      return;
-    }
-  }
-
-  if(!val) { textInput.focus(); return; }
-  answers[q.id] = val;
-  advance();
-}
-
-textInput?.addEventListener('keydown', (e) => {
-  if(e.key === 'Enter') submitText();
-});
-
-function advance(){
-  if(current < questions.length - 1){
-    current++;
-    renderQuestion();
-  } else {
-    showAnalyzing();
-  }
-}
-
-function goBack(){
-  if(current > 0){
-    current--;
-    renderQuestion();
-  }
-}
-
-function startQuiz(){
-  document.getElementById('landing-view').hidden = true;
-  qView.hidden = false;
-  renderQuestion();
-}
-
-/* ============ Q21: ANALYZING SCREEN ============ */
 function showAnalyzing(){
-  qView.hidden = true;
-  analyzingView.hidden = false;
-
-  const userName = (answers[9] || 'TÚ').toUpperCase();
-  const exName = (answers[10] || 'TU AMOR').toUpperCase();
-
-  document.getElementById('analyzing-desc').innerHTML = 
-    `Estamos finalizando los últimos detalles de tu ritual personalizado...<br><br><b>${userName}</b> y <b>${exName}</b> están más cerca que nunca de reencontrarse.`;
-
+  qView.hidden = true; analyzingView.hidden = false;
   const ringFg = document.getElementById('ring-fg');
   const ringPct = document.getElementById('ring-pct');
-  const stepText = document.getElementById('analyzing-step');
   const RING_LEN = ringFg.getTotalLength();
   ringFg.style.strokeDasharray = RING_LEN;
-
-  const steps = [
-    'ANALIZANDO CONEXIÓN ASTRAL',
-    'CALCULANDO COMPATIBILIDAD ENERGÉTICA',
-    'FINALIZANDO DETALLES DEL RITUAL',
-    'RITUAL LISTO'
-  ];
-
   let pct = 23;
-  const totalDuration = 3500;
-  const stepTime = 30;
-  const increment = (100 - 23) / (totalDuration / stepTime);
-
   const interval = setInterval(() => {
-    pct = Math.min(100, pct + increment);
-    const offset = RING_LEN - (RING_LEN * pct/100);
-    ringFg.style.strokeDashoffset = offset;
+    pct = Math.min(100, pct + 0.5);
+    ringFg.style.strokeDashoffset = RING_LEN - (RING_LEN * pct/100);
     ringPct.textContent = Math.round(pct) + '%';
-    const stepIdx = Math.min(steps.length - 1, Math.floor(((pct - 23)/77) * steps.length));
-    stepText.textContent = steps[stepIdx];
-
-    if(pct >= 100){
-      clearInterval(interval);
-      setTimeout(showResult, 500);
-    }
-  }, stepTime);
+    if(pct >= 100){ clearInterval(interval); setTimeout(showResult, 500); }
+  }, 20);
 }
 
-/* ============ Q22: RESULT / VSL SCREEN ============ */
 function showResult(){
-  analyzingView.hidden = true;
-  resultView.hidden = false;
-
-  const userName = answers[9] || 'Amiga';
-  const exName = answers[10] || 'él/ella';
-
-  document.getElementById('result-title').textContent = `¡${userName}, tu ritual está listo!`;
-  document.getElementById('result-subtitle').textContent = 
-    `Si activas el ritual HOY, prepárate para ver a ${exName} buscándote desesperadamente en los próximos 14 días.`;
-
+  analyzingView.hidden = true; resultView.hidden = false;
+  document.getElementById('result-title').textContent = `¡${answers[9] || 'Amiga'}, tu ʳⁱᵗᵘᵃˡ está listo!`;
   setupDynamicDate();
   loadWistiaPlayer();
 }
 
 function loadWistiaPlayer(){
   const container = document.getElementById('vsl-container');
-  if(!container || container.dataset.loaded) return;
-  
+  if(container.dataset.loaded) return;
   container.dataset.loaded = "true";
-  container.innerHTML = `
-    <style>
-      wistia-player[media-id='m4pv3ygruy']:not(:defined) {
-        background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/m4pv3ygruy/swatch');
-        display: block;
-        filter: blur(5px);
-        padding-top:177.78%;
-      }
-    </style>
-    <wistia-player id="vsl-player" media-id="m4pv3ygruy" seo="false" aspect="0.5625"></wistia-player>
-  `;
-
-  const script1 = document.createElement('script');
-  script1.src = "https://fast.wistia.com/player.js";
-  script1.async = true;
-  document.head.appendChild(script1);
-
-  const script2 = document.createElement('script');
-  script2.src = "https://fast.wistia.com/embed/m4pv3ygruy.js";
-  script2.type = "module";
-  script2.async = true;
-  document.head.appendChild(script2);
-
-  setTimeout(setupVideoGate, 800);
+  container.innerHTML = `<wistia-player id="vsl-player" media-id="m4pv3ygruy" seo="false" aspect="0.5625"></wistia-player>`;
+  const script1 = document.createElement('script'); script1.src = "https://fast.wistia.com/player.js"; script1.async = true; document.head.appendChild(script1);
+  const script2 = document.createElement('script'); script2.src = "https://fast.wistia.com/embed/m4pv3ygruy.js"; script2.type = "module"; script2.async = true; document.head.appendChild(script2);
 }
 
 function setupDynamicDate(){
-  const dateObj = new Date();
   const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-  const day = dateObj.getDate();
-  const month = months[dateObj.getMonth()];
-  
-  const dateElement = document.getElementById('dynamic-date-note');
-  if(dateElement){
-    dateElement.textContent = `*Oferta válida hasta el ${day} de ${month} a las 23:59`;
-  }
+  const now = new Date();
+  document.getElementById('dynamic-date-note').textContent = `*Oferta válida hasta el ${now.getDate()} de ${months[now.getMonth()]} a las 23:59`;
 }
 
-function setupVideoGate(){
-  const offerWrap = document.getElementById('offer-wrap');
-  const lockNote = document.getElementById('buy-lock-note');
-  const player = document.getElementById('vsl-player');
-  const REVEAL_AT_SECONDS = 260; // 04:20 (4*60 + 20 segundos)
-  let revealed = false;
-
-  function reveal(){
-    if(!revealed){
-      revealed = true;
-      offerWrap.classList.add('visible');
-      if(lockNote) lockNote.style.display = 'none';
-    }
-  }
-
-  if(player){
-    player.addEventListener('time-update', () => {
-      if(player.currentTime >= REVEAL_AT_SECONDS) reveal();
-    });
-    player.addEventListener('end', reveal);
-  }
-}
-
-/* Evento de clique do Botão de Compra integrado com a função buildHotmartLink */
 document.getElementById('buy-btn').addEventListener('click', () => {
-  const hotmartBaseUrl = 'https://pay.hotmart.com/V107174353I?checkoutMode=10';
-  window.location.href = buildHotmartLink(hotmartBaseUrl);
+  window.location.href = buildHotmartLink('https://pay.hotmart.com/V107174353I?checkoutMode=10');
 });
 </script>
 
