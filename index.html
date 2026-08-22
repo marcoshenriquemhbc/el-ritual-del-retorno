@@ -1126,8 +1126,38 @@ function loadWistiaPlayer(){
   if(container.dataset.loaded) return;
   container.dataset.loaded = "true";
   container.innerHTML = `<wistia-player id="vsl-player" media-id="m4pv3ygruy" seo="false" aspect="0.5625"></wistia-player>`;
-  const script1 = document.createElement('script'); script1.src = "https://fast.wistia.com/player.js"; script1.async = true; document.head.appendChild(script1);
-  const script2 = document.createElement('script'); script2.src = "https://fast.wistia.com/embed/m4pv3ygruy.js"; script2.type = "module"; script2.async = true; document.head.appendChild(script2);
+
+  const script1 = document.createElement('script');
+  script1.src = "https://fast.wistia.com/player.js";
+  script1.async = true;
+  document.head.appendChild(script1);
+
+  const script2 = document.createElement('script');
+  script2.src = "https://fast.wistia.com/embed/m4pv3ygruy.js";
+  script2.type = "module";
+  script2.async = true;
+  document.head.appendChild(script2);
+
+  let offerRevealed = false;
+
+  function revealOffer(){
+    if(offerRevealed) return;
+    offerRevealed = true;
+    document.getElementById('offer-wrap').classList.add('visible');
+    document.getElementById('buy-lock-note').hidden = true;
+  }
+
+  // Libera aos 30s reais de reprodução do vídeo
+  const player = document.getElementById('vsl-player');
+  player.addEventListener('timechange', function(e){
+    const currentTime = e.detail;
+    if(currentTime >= 30){
+      revealOffer();
+    }
+  });
+
+  // Fallback: garante liberação em 30s mesmo se o evento do player falhar
+  setTimeout(revealOffer, 30000);
 }
 
 function setupDynamicDate(){
