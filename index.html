@@ -1147,17 +1147,17 @@ function loadWistiaPlayer(){
     document.getElementById('buy-lock-note').hidden = true;
   }
 
-  // Libera aos 30s reais de reprodução do vídeo
+  // Libera aos 6 minutos (360s) reais de reprodução do vídeo
   const player = document.getElementById('vsl-player');
   player.addEventListener('timechange', function(e){
     const currentTime = e.detail;
-    if(currentTime >= 30){
+    if(currentTime >= 360){
       revealOffer();
     }
   });
 
-  // Fallback: garante liberação em 30s mesmo se o evento do player falhar
-  setTimeout(revealOffer, 30000);
+  // Fallback: garante liberação em 6 minutos mesmo se o evento do player falhar
+  setTimeout(revealOffer, 360000);
 }
 
 function setupDynamicDate(){
