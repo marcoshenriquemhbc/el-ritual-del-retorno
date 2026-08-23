@@ -1116,9 +1116,6 @@ function showResult(){
   document.getElementById('result-title').innerHTML = `¡${answers[9] || 'Amiga'}, tu <span class="ritual-word">ʳⁱᵗᵘᵃˡ</span> está listo!`;
   setupDynamicDate();
   loadWistiaPlayer();
-  if (typeof fbq === 'function') {
-    fbq('track', 'ViewContent');
-  }
 }
 
 function loadWistiaPlayer(){
@@ -1139,6 +1136,7 @@ function loadWistiaPlayer(){
   document.head.appendChild(script2);
 
   let offerRevealed = false;
+  let viewContentFired = false;
 
   function revealOffer(){
     if(offerRevealed) return;
@@ -1147,17 +1145,30 @@ function loadWistiaPlayer(){
     document.getElementById('buy-lock-note').hidden = true;
   }
 
-  // Libera aos 6 minutos (360s) reais de reprodução do vídeo
+  function fireViewContent(){
+    if(viewContentFired) return;
+    viewContentFired = true;
+    if (typeof fbq === 'function') {
+      fbq('track', 'ViewContent');
+    }
+  }
+
   const player = document.getElementById('vsl-player');
   player.addEventListener('timechange', function(e){
     const currentTime = e.detail;
+    // Libera a oferta aos 6 minutos (360s) reais de reprodução do vídeo
     if(currentTime >= 360){
       revealOffer();
     }
+    // Dispara o evento Meta ViewContent aos 8m30s (510s) reais de reprodução
+    if(currentTime >= 510){
+      fireViewContent();
+    }
   });
 
-  // Fallback: garante liberação em 6 minutos mesmo se o evento do player falhar
+  // Fallbacks: garantem a execução mesmo se o evento do player falhar
   setTimeout(revealOffer, 360000);
+  setTimeout(fireViewContent, 510000);
 }
 
 function setupDynamicDate(){
