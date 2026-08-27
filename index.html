@@ -24,6 +24,10 @@
 </script>
 
 <!-- 2º: Script de Captura de UTMs, src (Hotmart), Cookies, fbc/fbp e Beacon pro n8n -->
+<!-- CORRIGIDO: agora aguarda o cookie _fbp existir (criado de forma assíncrona
+     pelo fbevents.js) antes de disparar o beacon, em vez de ler o cookie uma
+     única vez logo após o init do pixel. Isso resolve a race condition que
+     fazia o fbp chegar null em ~9 de cada 10 eventos em redes mais lentas. -->
 <script>
   function getCookie(name) {
     const value = `; ${document.cookie}`;
@@ -70,6 +74,8 @@
   }
   const sessionSrc = getOrCreateSrc();
 
+  // _fbc é criado por nós mesmos a partir do fbclid da URL — não depende do
+  // carregamento do pixel, então não sofre da mesma race condition do _fbp.
   function ensureFbc() {
     const existing = getCookie('_fbc');
     if (existing) return existing;
@@ -83,7 +89,6 @@
     return null;
   }
   const capturedFbc = ensureFbc();
-  const capturedFbp = getCookie('_fbp');
 
   function buildHotmartLink(baseUrl) {
     const url = new URL(baseUrl);
@@ -92,23 +97,33 @@
       if (val) url.searchParams.set(param, val);
     });
     url.searchParams.set('src', sessionSrc);
+    // xcode é o único campo com garantia documentada de round-trip até o
+    // webhook de compra da Hotmart (aparece em data.purchase.tracking.external_code).
+    url.searchParams.set('xcode', sessionSrc);
+    const fbc = getCookie('_fbc');
+    const fbp = getCookie('_fbp');
+    if (fbc) url.searchParams.set('fbc', fbc);
+    if (fbp) url.searchParams.set('fbp', fbp);
     return url.toString();
   }
 
   const N8N_CAPTURE_WEBHOOK_URL = "https://n8n.iaatende.click/webhook/landing-page";
 
-  function sendCaptureBeacon() {
+  function sendCaptureBeacon(fbp) {
     if (!N8N_CAPTURE_WEBHOOK_URL || N8N_CAPTURE_WEBHOOK_URL.indexOf('http') !== 0) return;
     const payload = {
+      session_id: sessionSrc,
       src: sessionSrc,
       fbc: capturedFbc,
-      fbp: capturedFbp,
+      fbp: fbp,
+      sck: getCookie('sck'),
       user_agent: navigator.userAgent,
       event_source_url: window.location.href,
       utm_source: getCookie('utm_source'),
-      utm_campaign: getCookie('utm_campaign'),
       utm_medium: getCookie('utm_medium'),
-      utm_content: getCookie('utm_content')
+      utm_campaign: getCookie('utm_campaign'),
+      utm_content: getCookie('utm_content'),
+      utm_term: getCookie('utm_term')
     };
     fetch(N8N_CAPTURE_WEBHOOK_URL, {
       method: 'POST',
@@ -118,7 +133,29 @@
     }).catch(function(){});
   }
 
-  sendCaptureBeacon();
+  // Correção principal: espera o _fbp existir (polling) antes de enviar o
+  // beacon, em vez de ler o cookie uma única vez e congelar o valor (geralmente
+  // null) numa const. Timeout de 3s garante que o beacon eventualmente
+  // dispara mesmo se o pixel nunca carregar (ex: adblocker).
+  (function waitForFbpAndSend() {
+    const MAX_WAIT_MS = 3000;
+    const INTERVAL_MS = 150;
+    let waited = 0;
+
+    const timer = setInterval(function () {
+      const fbp = getCookie('_fbp');
+      waited += INTERVAL_MS;
+
+      if (fbp) {
+        clearInterval(timer);
+        sendCaptureBeacon(fbp);
+      } else if (waited >= MAX_WAIT_MS) {
+        clearInterval(timer);
+        console.warn('[tracking] _fbp não disponível após ' + MAX_WAIT_MS + 'ms — enviando beacon sem fbp.');
+        sendCaptureBeacon(null);
+      }
+    }, INTERVAL_MS);
+  })();
 </script>
 
 <style>
