@@ -5,11 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>El Ritual del Regresso — Diagnóstico Energético</title>
 
-<!-- Preconnect para rápida conexión de origens externas -->
 <link rel="preconnect" href="https://lp.iaatende.click" crossorigin>
 <link rel="preconnect" href="https://fast.wistia.com" crossorigin>
 
-<!-- 1º: Meta Pixel Base Code -->
 <script>
   !function(f,b,e,v,n,t,s)
   {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -23,11 +21,6 @@
   fbq('track', 'PageView');
 </script>
 
-<!-- 2º: Script de Captura de UTMs, src (Hotmart), Cookies, fbc/fbp e Beacon pro n8n -->
-<!-- CORRIGIDO: agora aguarda o cookie _fbp existir (criado de forma assíncrona
-     pelo fbevents.js) antes de disparar o beacon, em vez de ler o cookie uma
-     única vez logo após o init do pixel. Isso resolve a race condition que
-     fazia o fbp chegar null em ~9 de cada 10 eventos em redes mais lentas. -->
 <script>
   function getCookie(name) {
     const value = `; ${document.cookie}`;
@@ -74,8 +67,6 @@
   }
   const sessionSrc = getOrCreateSrc();
 
-  // _fbc é criado por nós mesmos a partir do fbclid da URL — não depende do
-  // carregamento do pixel, então não sofre da mesma race condition do _fbp.
   function ensureFbc() {
     const existing = getCookie('_fbc');
     if (existing) return existing;
@@ -97,8 +88,6 @@
       if (val) url.searchParams.set(param, val);
     });
     url.searchParams.set('src', sessionSrc);
-    // xcode é o único campo com garantia documentada de round-trip até o
-    // webhook de compra da Hotmart (aparece em data.purchase.tracking.external_code).
     url.searchParams.set('xcode', sessionSrc);
     const fbc = getCookie('_fbc');
     const fbp = getCookie('_fbp');
@@ -133,10 +122,6 @@
     }).catch(function(){});
   }
 
-  // Correção principal: espera o _fbp existir (polling) antes de enviar o
-  // beacon, em vez de ler o cookie uma única vez e congelar o valor (geralmente
-  // null) numa const. Timeout de 3s garante que o beacon eventualmente
-  // dispara mesmo se o pixel nunca carregar (ex: adblocker).
   (function waitForFbpAndSend() {
     const MAX_WAIT_MS = 3000;
     const INTERVAL_MS = 150;
@@ -771,7 +756,7 @@
   <div id="landing-view">
     <div class="landing-stage">
       <div class="landing-image">
-        <img src="https://lp.iaatende.click/wp-content/uploads/2026/07/Gemini_Generated_Image_bfz12rbfz12rbfz1-1.png" 
+        <img src="https://raw.githubusercontent.com/marcoshenriquemhbc/el-ritual-del-retorno/refs/heads/main/Gemini_Generated_Image_bfz12rbfz12rbfz1-1.png" 
              alt="El Ritual del Regresso" 
              width="260" 
              height="260" 
@@ -790,7 +775,7 @@
       </div>
 
       <div class="landing-test-image" style="width:100%; max-width:260px; margin-top:16px;">
-        <img src="https://lp.iaatende.click/wp-content/uploads/2026/07/testimonial-01.webp"
+        <img src="https://raw.githubusercontent.com/marcoshenriquemhbc/el-ritual-del-retorno/refs/heads/main/testimonial-01.webp"
              alt="Testimonio"
              style="width:100%; height:auto; border-radius:12px; border:1px solid var(--line); display:block;"
              loading="lazy">
@@ -1126,14 +1111,14 @@ function renderQuestion(){
     textInput.focus();
   } else if(q.type === 'story') {
     storyWrap.hidden = false;
-    storyContent.innerHTML = `<img src="https://lp.iaatende.click/wp-content/uploads/2026/07/foto.jpg" alt="María Fernanda Salazar" class="profile-photo" width="100" height="100" loading="lazy">
+    storyContent.innerHTML = `<img src="https://raw.githubusercontent.com/marcoshenriquemhbc/el-ritual-del-retorno/refs/heads/main/download%20(4).png" alt="María Fernanda Salazar" class="profile-photo" width="100" height="100" loading="lazy">
       <p style="text-align: center; font-weight: 600; color: var(--ink); margin-bottom: 12px;">Mi nombre es María Fernanda Salazar</p>
       <p>Desde hace más de 9 años, mi misión ha sido una sola: usar el conocimiento que heredé de familia para ayudar a mujeres como tú que tienen el corazón roto.</p>
       <p>He dedicado mi vida a demostrar que para todo sufrimiento de amor, siempre existe un camino de regreso.</p>
       <div class="carousel-hint">← Desliza para ver más →</div>
       <div class="carousel-container">
-        <div class="carousel-item"><img src="https://lp.iaatende.click/wp-content/uploads/2026/07/testimonial-01.webp" alt="Testimonio" loading="lazy"></div>
-        <div class="carousel-item"><img src="https://lp.iaatende.click/wp-content/uploads/2026/07/testimonial-02.webp" alt="Testimonio" loading="lazy"></div>
+        <div class="carousel-item"><img src="https://raw.githubusercontent.com/marcoshenriquemhbc/el-ritual-del-retorno/refs/heads/main/testimonial-02.webp" alt="Testimonio" loading="lazy"></div>
+        <div class="carousel-item"><img src="https://raw.githubusercontent.com/marcoshenriquemhbc/el-ritual-del-retorno/refs/heads/main/testimonial-01.webp" alt="Testimonio" loading="lazy"></div>
       </div>`;
   }
 }
@@ -1233,17 +1218,14 @@ function loadWistiaPlayer(){
   const player = document.getElementById('vsl-player');
   player.addEventListener('timechange', function(e){
     const currentTime = e.detail;
-    // Libera a oferta aos 6 minutos (360s) reais de reprodução do vídeo
     if(currentTime >= 360){
       revealOffer();
     }
-    // Dispara o evento Meta ViewContent aos 8m30s (510s) reais de reprodução
     if(currentTime >= 510){
       fireViewContent();
     }
   });
 
-  // Fallbacks: garantem a execução mesmo se o evento do player falhar
   setTimeout(revealOffer, 360000);
   setTimeout(fireViewContent, 510000);
 }
