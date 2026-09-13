@@ -1228,7 +1228,7 @@ function loadWistiaPlayer(){
   const player = document.getElementById('vsl-player');
   player.addEventListener('timechange', function(e){
     const currentTime = e.detail;
-    if(currentTime >= 360){
+    if(currentTime >= 480){
       revealOffer();
     }
     if(currentTime >= 510){
@@ -1236,7 +1236,7 @@ function loadWistiaPlayer(){
     }
   });
 
-  setTimeout(revealOffer, 360000);
+  setTimeout(revealOffer, 480000);
   setTimeout(fireViewContent, 510000);
 }
 
