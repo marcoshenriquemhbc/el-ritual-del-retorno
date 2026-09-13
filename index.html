@@ -1155,7 +1155,17 @@ function loadWistiaPlayer(){
   const container = document.getElementById('vsl-container');
   if(container.dataset.loaded) return;
   container.dataset.loaded = "true";
-  container.innerHTML = `<wistia-player id="vsl-player" media-id="m4pv3ygruy" seo="false" aspect="0.5625"></wistia-player>`;
+  container.innerHTML = `
+    <style>
+      wistia-player[media-id='x413wpzyfd']:not(:defined) {
+        background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/x413wpzyfd/swatch');
+        display: block;
+        filter: blur(5px);
+        padding-top:177.22%;
+      }
+    </style>
+    <wistia-player id="vsl-player" media-id="x413wpzyfd" seo="false" aspect="0.5642633228840125"></wistia-player>
+  `;
 
   const script1 = document.createElement('script');
   script1.src = "https://fast.wistia.com/player.js";
@@ -1163,7 +1173,7 @@ function loadWistiaPlayer(){
   document.head.appendChild(script1);
 
   const script2 = document.createElement('script');
-  script2.src = "https://fast.wistia.com/embed/m4pv3ygruy.js";
+  script2.src = "https://fast.wistia.com/embed/x413wpzyfd.js";
   script2.type = "module";
   script2.async = true;
   document.head.appendChild(script2);
